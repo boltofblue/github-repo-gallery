@@ -1,6 +1,7 @@
 // targeting the div w/in overview class 
 const overview = document.querySelector(".overview");
 const username = "boltofblue";
+const repoList = document.querySelector(".repo-list");
 
 const gitUserInfo = async function () {
     // fetching user info from GitHub api 
@@ -32,4 +33,23 @@ const displayUserInfo = function (data) {
 
     // appends div to the overview element 
     overview.append(div);
+    gitRepos();
+};
+
+const gitRepos = async function () {
+    const fetchRepos = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+    const repoData = await fetchRepos.json();
+    displayRepos(repoData);
+   // console.log(repoData);
+};
+
+gitRepos();
+
+const displayRepos = function (repos) {
+    for (const repo of repos) {
+       const repoItem = document.createElement("li");
+       repoItem.classList.add("repo");
+       repoItem.innerHTML = `<h3>${repo.name}</h3>`;
+       repoList.append(repoItem);
+    }
 };
